@@ -21,6 +21,6 @@ Resources:
 Outputs:
   TopicArn:
     Description: Reminders Topic Arn
-    Value: !GetAtt RemindersTopic.Arn
+    Value: !Ref RemindersTopic
     Export:
       Name: !Sub ${AWS::StackName}-topic
