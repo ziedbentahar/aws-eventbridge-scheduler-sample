@@ -1,0 +1,13 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Deployment Bucket
+
+Parameters:
+  DeploymentBucketName:
+    Type: String
+
+Resources:
+  DeploymentBucket:
+    Type: AWS::S3::Bucket
+    Properties: 
+      AccessControl: Private
+      BucketName: !Ref DeploymentBucketName

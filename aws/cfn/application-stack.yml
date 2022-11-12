@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: my awesome reminder app
+Parameters:
+  DeploymentBucketName:
+    Type: String
+  Application:
+    Type: String
+    Default: awesome-reminder
+  Environment:
+    Type: String
+    AllowedValues:
+      - dev
+      - stage
+      - prod
+  RegisterReminderLambdaZipFile:
+    Type: String
+
+Resources:
+  RegisterReminderLambda:
+    Type: AWS::CloudFormation::Stack
+    Properties: 
+      TemplateURL: ./components/register-reminder-lambda.yml
+      Parameters:
+        Application: !Ref Application
+        Environment: !Ref Environment
+        LambdaName: register-reminder
+        LambdaHandler: index.handler
+        LambdaBucketName: !Ref DeploymentBucketName
+        LambdaZipFile: !Ref RegisterReminderLambdaZipFile
+        ReminderSchedulerTargetArn: !GetAtt ReminderTarget.Outputs.QueueArn 
+        ReminderSchedulerTargetRoleArn: !GetAtt SchedulerRole.Outputs.SchedulerRoleArn 
+
+  ReminderSqsTarget:
+    Type: AWS::CloudFormation::Stack
+    Properties: 
+      TemplateURL: ./components/sqs.yml
+      Parameters:
+        Application: !Ref Application
+        Environment: !Ref Environment
+
+  SchedulerRole:
+      Type: AWS::CloudFormation::Stack
+      Properties: 
+        TemplateURL: ./components/scheduler-role.yml
+        Parameters:
+          Application: !Ref Application
+          Environment: !Ref Environment
+          ReminderSchedulerTargetArn: !GetAtt ReminderTarget.Outputs.QueueArn 
+
+  ApiGatewaty:
+    Type: AWS::CloudFormation::Stack
+    Properties: 
+      TemplateURL: ./components/api-gateway.yml
+      Parameters:
+        Application: !Ref Application
+        Environment: !Ref Environment
+        RegisterReminderLambdaArn: !GetAtt RegisterReminderLambda.Outputs.LambdaFunctionArn
+
+
+
+      
+        

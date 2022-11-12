@@ -1,0 +1,92 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Register reminder lambda
+
+Parameters:
+  Application:
+    Type: String
+  Environment:
+    Type: String
+    AllowedValues:
+      - dev
+      - stage
+      - prod
+  LambdaName:
+    Type: String
+  LambdaHandler:
+    Type: String
+  LambdaBucketName:
+    Type: String
+  LambdaZipFile:
+    Type: String
+  ReminderSchedulerTargetArn:
+    Type: String
+  ReminderSchedulerTargetRoleArn:
+    Type: String
+
+
+Resources:
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: '/'
+      Policies:
+        - PolicyName: logs
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "arn:aws:logs:*:*:*"
+        - PolicyName: create-schedule
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - scheduler:CreateSchedule
+                Resource: !Ref ReminderSchedulerArn
+      
+  LambdaLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+     LogGroupName: !Join ['/', ['/aws/lambda', !Ref LambdaFunction]]
+     RetentionInDays: 7 # days
+                
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ${Application}-${Environment}-${LambdaName}
+      Code:
+        S3Bucket: !Sub ${LambdaBucketName}
+        S3Key: !Sub ${LambdaZipFile}
+      Handler: !Sub ${LambdaHandler}
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Architectures:
+        - x86_64
+      Runtime: nodejs16.x
+      Timeout: 60
+      MemorySize: 512
+      Environment:
+        Variables:
+          REMINDER_TARGET_ROLE_ARN: !Ref ReminderSchedulerTargetArn
+          REMINDER_TARGET_ARN: !Ref ReminderSchedulerTargetRoleArn
+          APPLICATION_NAME: !Sub ${Application}-${Environment}
+      
+Outputs:
+  LambdaFunctionArn:
+    Description: Lambda Arn
+    Value: !GetAtt LambdaFunction.Arn
+    Export:
+      Name: !Sub ${AWS::StackName}-register-reminder-lambda
+  
+  
+  

@@ -1,0 +1,143 @@
+name: awesome reminder pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+      
+  pull_request:
+    branches: [ main ]
+
+env:
+  APPLICATION_NAME: awesome-reminder
+  DEPLOYMENT_BUCKET_NAME: awesome-reminder-deployment-bucket
+  REGISTER_REMINDR_COMPONENT_NAME: register-reminder
+  
+
+jobs:
+  build-lambdas: 
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: src/backend
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup Node
+      uses: actions/setup-node@v3.1.1
+      with:
+        node-version: 14
+
+    - name: Restore dependencies
+      run: npm install
+
+    - name: Build
+      run: npm run bundle
+
+    - name: Zip lambdas
+      run: |
+        declare -a ComponentArray=(
+          ${{ env.REGISTER_REMINDR_COMPONENT_NAME }} 
+        )
+
+        for component in ${ComponentArray[@]}; do
+          cd dist/$component
+          zip -r $component-${{ github.sha }}.zip  .
+          cd ../..
+        done
+
+
+    - name: Upload lambda build artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: lambdas-artifact
+        path: src/backend/dist/**/*.zip
+
+  create-or-update-lambda-deployment-bucket:
+      runs-on: ubuntu-latest
+      
+      steps:
+      - uses: actions/checkout@v3
+      
+    
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+
+      - name: Create or update deployment bucket
+        run: |
+          aws cloudformation deploy --template-file ./aws/cfn/deployment-bucket.yml --stack-name awesome-reminder-deployment-bucket --parameter-overrides DeploymentBucketName=${{ env.DEPLOYMENT_BUCKET_NAME}}
+
+
+  upload-lambda-artifacts-to-s3:
+    needs: [
+      build-lambdas, 
+      create-or-update-lambda-deployment-bucket
+    ]
+    
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: actions/download-artifact@v3
+      with:
+        name: lambdas-artifact
+        path: lambdas-artifact
+
+
+   
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-west-1
+
+    - name: Upload to S3
+      run: |
+        declare -a ComponentArray=(
+          ${{ env.REGISTER_REMINDR_COMPONENT_NAME }} 
+        )
+
+        for component in ${ComponentArray[@]}; do
+          aws s3 cp lambdas-artifact/$component/$component-${{ github.sha }}.zip s3://${{ env.DEPLOYMENT_BUCKET_NAME }}
+        done
+
+
+
+  deploy:
+    needs: [upload-lambda-artifacts-to-s3]
+    
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3 
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-west-1
+
+    - name: Package and Deploy Infrastructure
+      run: |
+        aws cloudformation package --template-file ./aws/cfn/application-stack.yml --output-template-file application-stack.packaged.yml --s3-bucket ${{ env.DEPLOYMENT_BUCKET_NAME}}
+        aws cloudformation deploy --template-file application-stack.packaged.yml --stack-name awesome-reminder --parameter-overrides \
+            Application=${{ env.APPLICATION_NAME }} \
+            Environment=dev \
+            DeploymentBucketName=${{ env.DEPLOYMENT_BUCKET_NAME }} \
+            RegisterReminderLambdaZipFile=${{ env.REGISTER_REMINDR_COMPONENT_NAME }}-${{ github.sha }}.zip \
+            --capabilities CAPABILITY_IAM
+        if [[$? -ne 0]];
+        then
+          aws cloudformation describe-stack-events --stack-name awesome-reminder
+        fi
+
+        

@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Role for event bridge to push to SQS queue
+Parameters:
+  Application:
+    Type: String
+    Default: awesome-reminder
+  Environment:
+    Type: String
+    AllowedValues:
+      - dev
+      - stage
+      - prod
+  TargetQueueArn:
+    Type: String
+
+Resources:
+  SchedulerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: scheduler.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: '/'
+      Policies:
+        - PolicyName: send-message-to-sqs
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - sqs:sqs:SendMessage
+                Resource: !Ref QueueArn
+
+Outputs:
+  SchedulerRoleArn:
+    Description: Role Arn
+    Value: !GetAtt SchedulerRole.Arn
+    Export:
+      Name: !Sub ${AWS::StackName}-event-bridge-role

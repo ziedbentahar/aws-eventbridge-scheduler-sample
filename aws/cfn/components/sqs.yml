@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: awesome reminder queue
+
+Parameters:
+  Environment:
+    Type: String
+    AllowedValues:
+      - dev
+      - stage
+      - prod
+  Application:
+    Type: String
+
+Resources:
+  Queue:
+    Type: AWS::SQS::Queue
+    Properties: 
+      QueueName: !Sub ${Application}-${Environment}-due-reminders-queue 
+
+Outputs:
+  QueueArn:
+    Description: Queue Arn
+    Value: !GetAtt Queue.Arn
+    Export:
+      Name: !Sub ${AWS::StackName}-queue
