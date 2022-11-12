@@ -32,7 +32,7 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                  - sqs:sqs:SendMessage
+                  - sqs:SendMessage
                 Resource: !Ref TargetQueueArn
 
 Outputs:
