@@ -51,9 +51,10 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                  - sqs:DeleteMessage
-                  - sqs:ChangeMessageVisibility
-                  - sqs:ReceiveMessage
+                - sqs:ReceiveMessage
+                - sqs:DeleteMessage
+                - sqs:GetQueueAttributes
+                - sqs:ChangeMessageVisibility
                 Resource: !Ref ReminderSchedulerSourceArn
               - Effect: Allow
                 Action:
@@ -83,6 +84,14 @@ Resources:
       Environment:
         Variables:
           TARGET_TOPIC_ARN: !Ref ReminderTargetArn
+
+  EventSourceMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      BatchSize: 10
+      Enabled: true
+      EventSourceArn: !Ref ReminderSchedulerSourceArn
+      FunctionName: !GetAtt LambdaFunction.Arn
       
 Outputs:
   LambdaFunctionArn:
