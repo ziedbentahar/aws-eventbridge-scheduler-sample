@@ -3,8 +3,8 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
   entry: {
-    ["get-weather-and-air-quality-by-location"]:
-      "./lambdas/get-weather-and-air-quality-by-location/index.ts",
+    ["register-reminder"]: "./lambdas/register-reminder/index.ts",
+    ["send-reminder"]: "./lambdas/send-reminder/index.ts",
   },
   target: "node",
   output: {
