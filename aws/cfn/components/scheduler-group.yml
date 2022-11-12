@@ -20,6 +20,6 @@ Resources:
 Outputs:
   SchedulerGroupName:
     Description: Schedule group name
-    Value: !GetAtt ScheduleGroup.Arn
+    Value: !GetAtt ScheduleGroup.Name
     Export:
       Name: !Sub ${AWS::StackName}-schedule-group-name
