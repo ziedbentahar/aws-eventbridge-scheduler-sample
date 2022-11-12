@@ -19,6 +19,8 @@ export const handler = async (event: SQSEvent, context: Context) => {
       Subject: reminder.message,
     };
 
+    console.log(reminder.phoneNumber);
+
     sns.publish(smsInput);
   }
 };
