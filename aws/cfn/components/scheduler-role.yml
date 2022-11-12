@@ -33,11 +33,11 @@ Resources:
               - Effect: Allow
                 Action:
                   - sqs:sqs:SendMessage
-                Resource: !Ref QueueArn
+                Resource: !Ref TargetQueueArn
 
 Outputs:
   SchedulerRoleArn:
     Description: Role Arn
     Value: !GetAtt SchedulerRole.Arn
     Export:
-      Name: !Sub ${AWS::StackName}-event-bridge-role
+      Name: !Sub ${AWS::StackName}-scheduler-role

@@ -45,7 +45,7 @@ Resources:
         Parameters:
           Application: !Ref Application
           Environment: !Ref Environment
-          ReminderSchedulerTargetArn: !GetAtt ReminderSqsTarget.Outputs.QueueArn 
+          TargetQueueArn: !GetAtt ReminderSqsTarget.Outputs.QueueArn 
 
   ApiGatewaty:
     Type: AWS::CloudFormation::Stack
