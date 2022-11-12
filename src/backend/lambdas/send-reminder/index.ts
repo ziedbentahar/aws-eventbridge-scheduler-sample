@@ -9,12 +9,14 @@ const sns = new AWS.SNS({
 
 export const handler = async (event: SQSEvent, context: Context) => {
   for (const record of event.Records) {
+    console.log(record.body);
+
     const reminder = JSON.parse(record.body) as Reminder;
 
     const smsInput: PublishInput = {
       Message: reminder.message,
       PhoneNumber: reminder.phoneNumber,
-      TopicArn: process.env.TARGET_TOPIC_ARN,
+      Subject: reminder.message,
     };
 
     sns.publish(smsInput);
