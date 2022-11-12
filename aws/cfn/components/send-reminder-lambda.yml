@@ -59,7 +59,8 @@ Resources:
               - Effect: Allow
                 Action:
                   - sns:Publish
-                Resource: !Ref ReminderTargetArn
+                Resource: "*" 
+                #!Ref ReminderTargetArn
       
   LambdaLogGroup:
     Type: AWS::Logs::LogGroup
