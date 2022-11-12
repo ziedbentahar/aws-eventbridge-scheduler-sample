@@ -58,9 +58,9 @@ Resources:
                 Action:
                   - iam:PassRole
                 Resource: !Ref ReminderSchedulerTargetRoleArn
-                Condition: 
-                  StringLike:
-                    iam:iam:PassedToService: scheduler.amazonaws.com
+                # Condition: 
+                #   StringLike:
+                #     iam:iam:PassedToService: scheduler.amazonaws.com
       
   LambdaLogGroup:
     Type: AWS::Logs::LogGroup
