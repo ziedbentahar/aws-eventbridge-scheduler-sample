@@ -3,7 +3,7 @@ import AWS from "aws-sdk";
 import { randomUUID } from "crypto";
 import Reminder from "../types/reminder.model";
 
-var scheduler = new AWS.Scheduler({
+const scheduler = new AWS.Scheduler({
   region: process.env.AWS_REGION,
 });
 
@@ -26,7 +26,7 @@ export const handler = async (
     },
     Target: target,
     ScheduleExpression: mapRequestToScheduledExpression(request),
-    GroupName: process.env.APPLICATION_NAME!,
+    GroupName: process.env.REMINDER_SCHEDULER_GROUP_NAME!,
     ClientToken: randomUUID(),
   };
 

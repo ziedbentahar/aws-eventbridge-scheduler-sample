@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: awesome reminder sns
+
+Parameters:
+  Environment:
+    Type: String
+    AllowedValues:
+      - dev
+      - stage
+      - prod
+  Application:
+    Type: String
+
+Resources:
+  RemindersTopic:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: !Sub ${Application} ${Environment} topic
+      TopicName:  !Sub ${Application}-${Environment}-topic
+
+Outputs:
+  TopicArn:
+    Description: Reminders Topic Arn
+    Value: !GetAtt RemindersTopic.Arn
+    Export:
+      Name: !Sub ${AWS::StackName}-topic

@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Register reminder lambda
+Description: Send reminder lambda
 
 Parameters:
   Application:
@@ -18,13 +18,10 @@ Parameters:
     Type: String
   LambdaZipFile:
     Type: String
-  ReminderSchedulerTargetArn:
+  ReminderSchedulerSourceArn:
     Type: String
-  ReminderSchedulerTargetRoleArn:
+  ReminderTargetArn:
     Type: String
-  ReminderSchedulerGroupName: 
-    Type: String
-
 
 Resources:
   LambdaExecutionRole:
@@ -49,17 +46,19 @@ Resources:
                   - logs:CreateLogStream
                   - logs:PutLogEvents
                 Resource: "arn:aws:logs:*:*:*"
-        - PolicyName: create-schedule
+        - PolicyName: read-sqs-queue
           PolicyDocument:
             Statement:
               - Effect: Allow
                 Action:
-                  - scheduler:CreateSchedule
-                Resource: "*"
+                  - sqs:DeleteMessage
+                  - sqs:ChangeMessageVisibility
+                  - sqs:ReceiveMessage
+                Resource: !Ref ReminderSchedulerSourceArn
               - Effect: Allow
                 Action:
-                  - iam:PassRole
-                Resource: !Ref ReminderSchedulerTargetRoleArn
+                  - sns:Publish
+                Resource: !Ref ReminderTargetArn
       
   LambdaLogGroup:
     Type: AWS::Logs::LogGroup
@@ -83,9 +82,7 @@ Resources:
       MemorySize: 512
       Environment:
         Variables:
-          REMINDER_TARGET_ROLE_ARN: !Ref ReminderSchedulerTargetRoleArn
-          REMINDER_TARGET_ARN: !Ref ReminderSchedulerTargetArn
-          REMINDER_SCHEDULER_GROUP_NAME: !Ref ReminderSchedulerGroupName
+          TARGET_TOPIC_ARN: !Ref ReminderTargetArn
       
 Outputs:
   LambdaFunctionArn:

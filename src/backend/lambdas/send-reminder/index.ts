@@ -3,7 +3,7 @@ import AWS from "aws-sdk";
 import { PublishInput } from "aws-sdk/clients/sns";
 import Reminder from "../types/reminder.model";
 
-var sns = new AWS.SNS({
+const sns = new AWS.SNS({
   region: process.env.AWS_REGION,
 });
 
