@@ -47,7 +47,7 @@ Resources:
           Environment: !Ref Environment
           TargetQueueArn: !GetAtt ReminderSqsTarget.Outputs.QueueArn 
 
-  ApiGatewaty:
+  ApiGateway:
     Type: AWS::CloudFormation::Stack
     Properties: 
       TemplateURL: ./components/api-gateway.yml

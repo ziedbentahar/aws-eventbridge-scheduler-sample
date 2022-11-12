@@ -84,8 +84,8 @@ Resources:
       MemorySize: 512
       Environment:
         Variables:
-          REMINDER_TARGET_ROLE_ARN: !Ref ReminderSchedulerTargetArn
-          REMINDER_TARGET_ARN: !Ref ReminderSchedulerTargetRoleArn
+          REMINDER_TARGET_ROLE_ARN: !Ref ReminderSchedulerTargetRoleArn
+          REMINDER_TARGET_ARN: !Ref ReminderSchedulerTargetArn
           APPLICATION_NAME: !Sub ${Application}-${Environment}
       
 Outputs:
