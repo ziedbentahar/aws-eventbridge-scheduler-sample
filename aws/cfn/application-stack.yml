@@ -27,7 +27,7 @@ Resources:
         LambdaHandler: index.handler
         LambdaBucketName: !Ref DeploymentBucketName
         LambdaZipFile: !Ref RegisterReminderLambdaZipFile
-        ReminderSchedulerTargetArn: !GetAtt ReminderTarget.Outputs.QueueArn 
+        ReminderSchedulerTargetArn: !GetAtt ReminderSqsTarget.Outputs.QueueArn 
         ReminderSchedulerTargetRoleArn: !GetAtt SchedulerRole.Outputs.SchedulerRoleArn 
 
   ReminderSqsTarget:
@@ -45,7 +45,7 @@ Resources:
         Parameters:
           Application: !Ref Application
           Environment: !Ref Environment
-          ReminderSchedulerTargetArn: !GetAtt ReminderTarget.Outputs.QueueArn 
+          ReminderSchedulerTargetArn: !GetAtt ReminderSqsTarget.Outputs.QueueArn 
 
   ApiGatewaty:
     Type: AWS::CloudFormation::Stack
