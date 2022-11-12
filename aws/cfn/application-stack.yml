@@ -29,6 +29,15 @@ Resources:
         LambdaZipFile: !Ref RegisterReminderLambdaZipFile
         ReminderSchedulerTargetArn: !GetAtt ReminderSqsTarget.Outputs.QueueArn 
         ReminderSchedulerTargetRoleArn: !GetAtt SchedulerRole.Outputs.SchedulerRoleArn 
+        ReminderSchedulerGroupName: !GetAtt SchedulerGroup.Outputs.SchedulerGroupName
+
+  SchedulerGroup:
+    Type: AWS::CloudFormation::Stack
+    Properties: 
+      TemplateURL: ./components/scheduler-group.yml
+      Parameters:
+        Application: !Ref Application
+        Environment: !Ref Environment
 
   ReminderSqsTarget:
     Type: AWS::CloudFormation::Stack

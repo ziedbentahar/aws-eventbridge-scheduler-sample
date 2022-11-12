@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Role for event bridge to push to SQS queue
+Parameters:
+  Application:
+    Type: String
+    Default: awesome-reminder
+  Environment:
+    Type: String
+    AllowedValues:
+      - dev
+      - stage
+      - prod
+
+Resources:
+  ScheduleGroup:
+    Type: AWS::Scheduler::ScheduleGroup
+    Properties: 
+      Name: !Sub ${Application}-${Environment}
+
+Outputs:
+  SchedulerGroupName:
+    Description: Schedule group name
+    Value: !GetAtt ScheduleGroup.Arn
+    Export:
+      Name: !Sub ${AWS::StackName}-schedule-group-name

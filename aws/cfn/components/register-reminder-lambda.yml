@@ -22,6 +22,8 @@ Parameters:
     Type: String
   ReminderSchedulerTargetRoleArn:
     Type: String
+  ReminderSchedulerGroupName: 
+    Type: String
 
 
 Resources:
@@ -86,7 +88,7 @@ Resources:
         Variables:
           REMINDER_TARGET_ROLE_ARN: !Ref ReminderSchedulerTargetRoleArn
           REMINDER_TARGET_ARN: !Ref ReminderSchedulerTargetArn
-          APPLICATION_NAME: !Sub ${Application}-${Environment}
+          REMINDER_SCHEDULER_GROUP_NAME: !Ref ReminderSchedulerGroupName
       
 Outputs:
   LambdaFunctionArn:
