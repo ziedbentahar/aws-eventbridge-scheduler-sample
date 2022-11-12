@@ -79,7 +79,7 @@ Resources:
       Architectures:
         - x86_64
       Runtime: nodejs16.x
-      Timeout: 60
+      Timeout: 29
       MemorySize: 512
       Environment:
         Variables:
@@ -92,7 +92,7 @@ Resources:
       Enabled: true
       EventSourceArn: !Ref ReminderSchedulerSourceArn
       FunctionName: !GetAtt LambdaFunction.Arn
-      
+
 Outputs:
   LambdaFunctionArn:
     Description: Lambda Arn
