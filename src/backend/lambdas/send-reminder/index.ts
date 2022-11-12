@@ -21,6 +21,15 @@ export const handler = async (event: SQSEvent, context: Context) => {
 
     console.log(reminder.phoneNumber);
 
-    sns.publish(smsInput);
+    const result = sns.publish(smsInput);
+
+    const rp = await result.promise();
+
+    console.log({
+      error: rp.$response.error,
+      httpResponse: rp.$response.httpResponse,
+    });
+
+    rp.$response.error;
   }
 };
