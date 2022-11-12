@@ -41,6 +41,7 @@ jobs:
       run: |
         declare -a ComponentArray=(
           ${{ env.REGISTER_REMINDR_COMPONENT_NAME }} 
+          ${{ env.SEND_REMINDR_COMPONENT_NAME }}
         )
 
         for component in ${ComponentArray[@]}; do
