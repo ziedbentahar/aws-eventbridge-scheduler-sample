@@ -12,7 +12,7 @@ env:
   APPLICATION_NAME: awesome-reminder
   DEPLOYMENT_BUCKET_NAME: awesome-reminder-deployment-bucket
   REGISTER_REMINDR_COMPONENT_NAME: register-reminder
-  
+  SEND_REMINDR_COMPONENT_NAME: send-reminder
 
 jobs:
   build-lambdas: 
@@ -134,6 +134,7 @@ jobs:
             Environment=dev \
             DeploymentBucketName=${{ env.DEPLOYMENT_BUCKET_NAME }} \
             RegisterReminderLambdaZipFile=${{ env.REGISTER_REMINDR_COMPONENT_NAME }}-${{ github.sha }}.zip \
+            SendReminderLambdaZipFile=${{ env.SEND_REMINDR_COMPONENT_NAME }}-${{ github.sha }}.zip \
             --capabilities CAPABILITY_IAM
         if [[$? -ne 0]];
         then
