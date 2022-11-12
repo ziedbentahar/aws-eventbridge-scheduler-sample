@@ -56,11 +56,14 @@ Resources:
                 - sqs:GetQueueAttributes
                 - sqs:ChangeMessageVisibility
                 Resource: !Ref ReminderSchedulerSourceArn
+              - Effect: Deny
+                Action:
+                  - sns:Publish
+                Resource: "arn:aws:sns:*:*:*" 
               - Effect: Allow
                 Action:
                   - sns:Publish
                 Resource: "*" 
-                #!Ref ReminderTargetArn
       
   LambdaLogGroup:
     Type: AWS::Logs::LogGroup

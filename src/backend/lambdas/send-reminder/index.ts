@@ -9,27 +9,13 @@ const sns = new AWS.SNS({
 
 export const handler = async (event: SQSEvent, context: Context) => {
   for (const record of event.Records) {
-    console.log(record.body);
-
     const reminder = JSON.parse(record.body) as Reminder;
 
     const smsInput: PublishInput = {
       Message: reminder.message,
       PhoneNumber: reminder.phoneNumber,
-      Subject: reminder.message,
     };
-
-    console.log(reminder.phoneNumber);
-
     const result = sns.publish(smsInput);
-
-    const rp = await result.promise();
-
-    console.log({
-      error: rp.$response.error,
-      httpResponse: rp.$response.httpResponse,
-    });
-
-    rp.$response.error;
+    await result.promise();
   }
 };
