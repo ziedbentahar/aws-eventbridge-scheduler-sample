@@ -3,7 +3,6 @@ Description: Role for event bridge to push to SQS queue
 Parameters:
   Application:
     Type: String
-    Default: awesome-reminder
   Environment:
     Type: String
     AllowedValues:

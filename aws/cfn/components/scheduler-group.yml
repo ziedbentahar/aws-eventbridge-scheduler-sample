@@ -3,7 +3,6 @@ Description: Role for event bridge to push to SQS queue
 Parameters:
   Application:
     Type: String
-    Default: awesome-reminder
   Environment:
     Type: String
     AllowedValues:
@@ -20,6 +19,6 @@ Resources:
 Outputs:
   SchedulerGroupName:
     Description: Schedule group name
-    Value: !GetAtt ScheduleGroup.Name
+    Value: !Sub ${Application}-${Environment}
     Export:
       Name: !Sub ${AWS::StackName}-schedule-group-name
