@@ -23,7 +23,7 @@ const scheduleReminder = async (
       Mode: "OFF",
     },
     Target: target,
-    ScheduleExpression: `at(${identifiableReminder.entity.phoneNumber})`,
+    ScheduleExpression: `at(${identifiableReminder.entity.atTime})`,
     GroupName: process.env.REMINDER_SCHEDULER_GROUP_NAME!,
     ClientToken: randomUUID(),
   };

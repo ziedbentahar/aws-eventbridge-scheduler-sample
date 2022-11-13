@@ -9,10 +9,17 @@ const sns = new AWS.SNS({
 const sendSms = async (messageToPublish: {
   message: string;
   phoneNumber: string;
+  senderId: string;
 }): Promise<OperationResult> => {
   const smsInput: PublishInput = {
     Message: messageToPublish.message,
     PhoneNumber: messageToPublish.phoneNumber,
+    MessageAttributes: {
+      "AWS.SNS.SMS.SenderID": {
+        DataType: "String",
+        StringValue: messageToPublish.senderId,
+      },
+    },
   };
   const request = sns.publish(smsInput);
 

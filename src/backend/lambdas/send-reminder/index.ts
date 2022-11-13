@@ -11,7 +11,11 @@ export const handler = async (event: SQSEvent, context: Context) => {
       Reminder
     >;
 
-    const result = await sendSms(entity);
+    const result = await sendSms({
+      message: entity.message,
+      phoneNumber: entity.phoneNumber,
+      senderId: process.env.SMS_SENDER_ID!,
+    });
 
     if (result.status == "Error") {
       throw new Error("error occured when sending sms");

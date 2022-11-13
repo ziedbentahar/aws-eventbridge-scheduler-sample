@@ -88,6 +88,7 @@ Resources:
       Environment:
         Variables:
           TARGET_TOPIC_ARN: !Ref ReminderTargetArn
+          SMS_SENDER_ID: Reminder
 
   EventSourceMapping:
     Type: AWS::Lambda::EventSourceMapping
