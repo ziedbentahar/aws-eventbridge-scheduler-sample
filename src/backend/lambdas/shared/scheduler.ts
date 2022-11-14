@@ -46,6 +46,7 @@ const scheduleReminder = async (
 const deleteScheduledReminder = async (id: string) => {
   const schedulerInput: AWS.Scheduler.DeleteScheduleInput = {
     Name: id,
+    GroupName: process.env.REMINDER_SCHEDULER_GROUP_NAME!,
   };
 
   console.log("Deleting reminder");

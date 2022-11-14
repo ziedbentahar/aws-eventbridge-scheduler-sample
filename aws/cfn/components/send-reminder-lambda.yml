@@ -92,6 +92,7 @@ Resources:
       Environment:
         Variables:
           SMS_SENDER_ID: Reminder
+          REMINDER_SCHEDULER_GROUP_NAME: !Ref ReminderSchedulerGroupName
 
   EventSourceMapping:
     Type: AWS::Lambda::EventSourceMapping
