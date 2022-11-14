@@ -55,7 +55,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - scheduler:CreateSchedule
-                Resource: "*"
+                Resource: !Sub "arn:aws:scheduler:*:*:schedule/${ReminderSchedulerGroupName}/*"
               - Effect: Allow
                 Action:
                   - iam:PassRole
