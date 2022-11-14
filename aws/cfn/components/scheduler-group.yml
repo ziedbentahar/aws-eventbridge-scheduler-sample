@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Role for event bridge to push to SQS queue
+Description: scheduler-group
 Parameters:
   Application:
     Type: String
