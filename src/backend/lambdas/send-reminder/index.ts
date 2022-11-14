@@ -17,7 +17,7 @@ export const handler = async (event: SQSEvent, context: Context) => {
       senderId: process.env.SMS_SENDER_ID!,
     });
 
-    if (result.status == "Error") {
+    if (result.status === "Error") {
       throw new Error("error occured when sending sms");
     } else {
       await deleteScheduledReminder(id);

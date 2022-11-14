@@ -48,7 +48,11 @@ const deleteScheduledReminder = async (id: string) => {
     Name: id,
   };
 
-  await scheduler.deleteSchedule(schedulerInput);
+  console.log("Deleting reminder");
+
+  const res = await scheduler.deleteSchedule(schedulerInput).promise();
+
+  console.log(res.$response);
 };
 
 export { scheduleReminder, deleteScheduledReminder };

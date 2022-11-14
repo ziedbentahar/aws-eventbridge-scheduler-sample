@@ -65,7 +65,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - scheduler:DeleteSchedule
-                Resource: "*"
+                Resource: !Sub "arn:aws:scheduler:*:*:schedule/${ReminderSchedulerGroupName}/*"
       
   LambdaLogGroup:
     Type: AWS::Logs::LogGroup
