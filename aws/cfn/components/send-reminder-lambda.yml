@@ -62,6 +62,10 @@ Resources:
                 Action:
                   - sns:Publish
                 Resource: "*" 
+              - Effect: Allow
+                Action:
+                  - scheduler:DeleteSchedule
+                Resource: "*"
       
   LambdaLogGroup:
     Type: AWS::Logs::LogGroup
