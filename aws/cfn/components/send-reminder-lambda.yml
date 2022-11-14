@@ -87,7 +87,6 @@ Resources:
       MemorySize: 512
       Environment:
         Variables:
-          TARGET_TOPIC_ARN: !Ref ReminderTargetArn
           SMS_SENDER_ID: Reminder
 
   EventSourceMapping:
