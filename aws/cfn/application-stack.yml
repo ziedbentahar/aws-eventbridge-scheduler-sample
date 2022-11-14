@@ -45,7 +45,9 @@ Resources:
         LambdaHandler: index.handler
         LambdaBucketName: !Ref DeploymentBucketName
         LambdaZipFile: !Ref SendReminderLambdaZipFile
-        ReminderSchedulerSourceArn: !GetAtt ReminderSqsTarget.Outputs.QueueArn 
+        ReminderSchedulerSourceArn: !GetAtt ReminderSqsTarget.Outputs.QueueArn
+        ReminderSchedulerGroupName: !GetAtt SchedulerGroup.Outputs.SchedulerGroupName
+
 
   SchedulerGroup:
     Type: AWS::CloudFormation::Stack
