@@ -20,8 +20,6 @@ Parameters:
     Type: String
   ReminderSchedulerSourceArn:
     Type: String
-  ReminderTargetArn:
-    Type: String
 
 Resources:
   LambdaExecutionRole:
