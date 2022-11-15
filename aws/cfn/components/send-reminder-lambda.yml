@@ -56,14 +56,16 @@ Resources:
                 - sqs:GetQueueAttributes
                 - sqs:ChangeMessageVisibility
                 Resource: !Ref ReminderSchedulerSourceArn
-              - Effect: Deny
-                Action:
-                  - sns:Publish
-                Resource: "arn:aws:sns:*:*:*" 
+        - PolicyName: send-sms
+          PolicyDocument:
+            Statement:
               - Effect: Allow
                 Action:
                   - sns:Publish
-                Resource: "*" 
+                NotResource: "arn:aws:sns:*:*:*"
+        - PolicyName: delete-schedule
+          PolicyDocument:
+            Statement:
               - Effect: Allow
                 Action:
                   - scheduler:DeleteSchedule
