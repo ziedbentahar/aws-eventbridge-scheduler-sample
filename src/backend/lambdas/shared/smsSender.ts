@@ -1,8 +1,8 @@
-import AWS from "aws-sdk";
+import { SNS } from "aws-sdk";
 import { PublishInput } from "aws-sdk/clients/sns";
 import { OperationResult } from "../types/operation-result";
 
-const sns = new AWS.SNS({
+const sns = new SNS({
   region: process.env.AWS_REGION,
 });
 

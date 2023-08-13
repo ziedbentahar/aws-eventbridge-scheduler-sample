@@ -1,10 +1,10 @@
-import AWS from "aws-sdk";
+import { Scheduler } from "aws-sdk";
 import { randomUUID } from "crypto";
 import { IdentifiableEntity } from "../types/Identifiable-entity.model";
 import { OperationResult } from "../types/operation-result";
 import { Reminder } from "../types/reminder.model";
 
-const scheduler = new AWS.Scheduler({
+const scheduler = new Scheduler({
   region: process.env.AWS_REGION,
 });
 
@@ -22,6 +22,7 @@ const scheduleReminder = async (
     FlexibleTimeWindow: {
       Mode: "OFF",
     },
+    ActionAfterCompletion: "DELETE",
     Target: target,
     ScheduleExpression: `at(${identifiableReminder.entity.atTime})`,
     GroupName: process.env.REMINDER_SCHEDULER_GROUP_NAME!,
@@ -43,17 +44,4 @@ const scheduleReminder = async (
   }
 };
 
-const deleteScheduledReminder = async (id: string) => {
-  const schedulerInput: AWS.Scheduler.DeleteScheduleInput = {
-    Name: id,
-    GroupName: process.env.REMINDER_SCHEDULER_GROUP_NAME!,
-  };
-
-  console.log("Deleting reminder");
-
-  const res = await scheduler.deleteSchedule(schedulerInput).promise();
-
-  console.log(res.$response);
-};
-
-export { scheduleReminder, deleteScheduledReminder };
+export { scheduleReminder };

@@ -63,13 +63,7 @@ Resources:
                 Action:
                   - sns:Publish
                 NotResource: "arn:aws:sns:*:*:*"
-        - PolicyName: delete-schedule
-          PolicyDocument:
-            Statement:
-              - Effect: Allow
-                Action:
-                  - scheduler:DeleteSchedule
-                Resource: !Sub "arn:aws:scheduler:*:*:schedule/${ReminderSchedulerGroupName}/*"
+
       
   LambdaLogGroup:
     Type: AWS::Logs::LogGroup
