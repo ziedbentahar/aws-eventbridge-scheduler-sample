@@ -8,4 +8,5 @@ Full code and Github actions workflow for this bog post:
 https://medium.com/@zied-ben-tahar/using-aws-eventbridge-scheduler-to-build-a-serverless-reminder-application-ba3086cf8e
 
 
-![image](https://user-images.githubusercontent.com/6813975/201932133-8152afe3-00e5-456d-8fe1-2356ac3d89da.png)
+![image](https://github.com/ziedbentahar/aws-eventbridge-scheduler-sample/assets/6813975/2babe59f-77b1-488d-9f70-c7867a20ebbb)
+
